@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Diabetes Melitus Jabar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card-stat { border-left: 5px solid #0d6efd; }
+        .chart-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1">Dashboard Analisis Kesehatan Jawa Barat</span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm card-stat">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Penderita (Tahun {{ tahun_latest }})</h5>
+                    <h2 class="fw-bold">{{ total_latest }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm card-stat" style="border-left-color: #198754;">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Penderita (Akumulasi Semua Tahun)</h5>
+                    <h2 class="fw-bold">{{ total_all }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="chart-container">
+                <h5 class="mb-3">10 Wilayah dengan Kasus Tertinggi</h5>
+                <img src="{{ plot_bar }}" class="img-fluid" alt="Bar Chart">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <h5 class="mb-3">Sebaran Kategori</h5>
+                <img src="{{ plot_pie }}" class="img-fluid" alt="Pie Chart">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-container">
+                <h5 class="mb-3">Tren Kenaikan Kasus per Tahun</h5>
+                <img src="{{ plot_line }}" class="img-fluid w-100" alt="Line Chart" style="max-height: 400px; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    Tabel Detail: Top 10 Wilayah ({{ tahun_latest }})
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>No</th>
+                                <th>Kabupaten/Kota</th>
+                                <th>Jumlah Penderita</th>
+                                <th>Kategori</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data_table %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ row.nama_kabupaten_kota }}</td>
+                                <td>{{ row.jumlah_penderita_dm }}</td>
+                                <td>
+                                    <span class="badge {% if row.kategori_dm == 'Tinggi' %}bg-danger{% elif row.kategori_dm == 'Sedang' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                        {{ row.kategori_dm }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-4 text-muted">
+    <small>Dibuat dengan Flask, Pandas, & Matplotlib</small>
+</footer>
+
+</body>
+</html>
